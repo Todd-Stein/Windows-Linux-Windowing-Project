@@ -1,0 +1,1 @@
+The following is a personal project that I am creating to learn how windowing systems work in windows and linux with the goal of building a simple platform agnostic windowing system similar to SDL and Qt. Feel free to use the code as you see fit however stability is by no means garunteed.
