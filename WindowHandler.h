@@ -1,33 +1,42 @@
+#pragma once
+
 #include "Button.h"
 #include "WindowClass.h"
 
 #include <unordered_map>
+#include "HashFunction.h"
 
 using std::unordered_map;
-
-class HwndHash {
-public:
-    size_t operator() (const HWND handle) const {
-        return reinterpret_cast<size_t>(handle);
-    }
-};
 
 class  WindowHandler
 {
 private:
     WindowClass mainWindow;
-    HINSTANCE hInstance;
-    unordered_map<HWND, WindowClass, HwndHash> sparseWindowSet;
+    
+    unordered_map<WindowID, WindowClass, WindowIDHash> sparseWindowSet;
     static WindowHandler* handler;
+    #ifdef _WIN32
+    HINSTANCE hInstance;
+    #endif
 public:
     WindowHandler();
-     WindowHandler(HINSTANCE);
+    #ifdef _WIN32
+    WindowHandler(HINSTANCE);
+    #endif
     ~ WindowHandler();
-    HWND GetMainWindow() {return (HWND)mainWindow;}
-    HWND CreateNewWindow(string, int, int, int, int, HWND);
+    WindowID GetMainWindow() {return (WindowID)mainWindow;}
+    WindowID CreateNewWindow(string, int, int, int, int, WindowID);
+    #ifdef _WIN32
     static WindowHandler* Instance(HINSTANCE hInst) {
         if(handler==nullptr) {
             handler = new WindowHandler(hInst);
+        }
+        return handler;
+    }
+    #endif
+        static WindowHandler* Instance() {
+        if(handler==nullptr) {
+            handler = new WindowHandler();
         }
         return handler;
     }
